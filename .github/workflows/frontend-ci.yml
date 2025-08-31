@@ -10,6 +10,23 @@ on:
       - "starter/frontend/**"
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        working-directory: starter/frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: starter/frontend
+        run: npm run lint
+
   test:
     runs-on: ubuntu-latest
 
@@ -23,10 +40,6 @@ jobs:
       - name: Install dependencies
         working-directory: starter/frontend
         run: npm ci
-
-      - name: Run linter
-        working-directory: starter/frontend
-        run: npm run lint
 
       - name: Run test
         working-directory: starter/frontend
