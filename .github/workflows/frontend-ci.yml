@@ -1,13 +1,13 @@
 name: udacity ci project
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
 
   pull_request:
     branches:
       - main
     paths:
-      - 'starter/frontend/**'
+      - "starter/frontend/**"
 
 jobs:
   test:
@@ -23,11 +23,11 @@ jobs:
       - name: Install dependencies
         working-directory: starter/frontend
         run: npm ci
-      
+
       - name: Run linter
         working-directory: starter/frontend
-        run: npm run lint 
-      
+        run: npm run lint
+
       - name: Run test
         working-directory: starter/frontend
         run: npm run test
@@ -49,4 +49,3 @@ jobs:
             --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
             --tag mp-frontend:latest \
             starter/frontend
-
