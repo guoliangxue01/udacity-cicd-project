@@ -1,4 +1,4 @@
-name: udacity cd project
+name: udacity frontend cd project
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - "frontend/**"
+      - "starter/frontend/**"
 
 jobs:
   test:
