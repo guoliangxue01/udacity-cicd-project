@@ -49,9 +49,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Get backend LoadBalancer URL
-        id: backend
         run: |
-          # Get the backend service LoadBalancer hostname
           BACKEND_URL=$(kubectl get svc backend -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "BACKEND_URL=http://$BACKEND_URL:5000" >> $GITHUB_ENV
 
