@@ -1,4 +1,4 @@
-name: udacity frontend cd project
+name: Frontend Continuous Deployment
 
 on:
   workflow_dispatch:

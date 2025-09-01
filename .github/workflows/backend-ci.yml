@@ -1,4 +1,4 @@
-name: udacity backend ci project
+name: Backend Continuous Integration
 
 on:
   workflow_dispatch:
