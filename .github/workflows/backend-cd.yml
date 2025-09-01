@@ -76,6 +76,10 @@ jobs:
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
           sudo mv kustomize /usr/local/bin/
 
+      - name: Show kustomize output
+        working-directory: starter/frontend/k8s
+        run: kustomize build
+
       - name: Deploy manifests with kustomize
         working-directory: starter/backend/k8s
         env:
