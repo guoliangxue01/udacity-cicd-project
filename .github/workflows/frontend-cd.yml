@@ -48,15 +48,23 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Get backend LoadBalancer URL
+        id: backend
+        run: |
+          # Get the backend service LoadBalancer hostname
+          BACKEND_URL=$(kubectl get svc backend -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "BACKEND_URL=http://$BACKEND_URL:5000" >> $GITHUB_ENV
+
       - name: Build and push image to ECR
         working-directory: starter/frontend
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: frontend
           IMAGE_TAG: ${{ github.sha }}
+          REACT_APP_MOVIE_API_URL: ${{ env.BACKEND_URL }}
         run: |
           docker build \
-            --build-arg REACT_APP_MOVIE_API_URL=http://backend:5000 \
+            --build-arg REACT_APP_MOVIE_API_URL=$REACT_APP_MOVIE_API_URL \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
