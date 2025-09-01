@@ -76,4 +76,8 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          kustomize build | kubectl apply -f -
+          kustomize build | kubectl apply --validate=false -f -
+     
+      - name: Print application URL
+        run: |
+          kubectl get svc -A
