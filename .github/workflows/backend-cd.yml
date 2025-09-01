@@ -66,6 +66,11 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --region us-east-1 --name cluster
 
+      - name: Verify EKS connection
+        run: |
+          kubectl config current-context
+          kubectl get ns
+
       - name: Install Kustomize
         run: |
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
@@ -79,4 +84,5 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           kustomize edit set image backend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          kustomize build | kubectl apply -f -
+          kustomize build 
+          kubectl apply -f -
