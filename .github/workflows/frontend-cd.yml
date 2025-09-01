@@ -48,6 +48,21 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region us-east-1 --name cluster
+
+      - name: Setup kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Setup kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          chmod +x kustomize
+          sudo mv kustomize /usr/local/bin/
+
       - name: Get backend LoadBalancer URL
         run: |
           BACKEND_URL=$(kubectl get svc backend -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
@@ -65,21 +80,6 @@ jobs:
             --build-arg REACT_APP_MOVIE_API_URL=$REACT_APP_MOVIE_API_URL \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Update kubeconfig
-        run: aws eks update-kubeconfig --region us-east-1 --name cluster
-
-      - name: Setup kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-
-      - name: Setup kustomize
-        run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
-          chmod +x kustomize
-          sudo mv kustomize /usr/local/bin/
 
       - name: Deploy manifests with kustomize
         working-directory: starter/frontend/k8s
